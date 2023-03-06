@@ -24,7 +24,6 @@ declare -a organizations=("$organizationID") # add relevant organization IDs her
 declare -ar types=(
   appengine.googleapis.com/Application
   cloudfunctions.googleapis.com/CloudFunction
-  compute.googleapis.com/Image
   compute.googleapis.com/Instance
   sqladmin.googleapis.com/Instance
   storage.googleapis.com/Bucket

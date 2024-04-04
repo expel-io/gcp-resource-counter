@@ -62,7 +62,7 @@ from the previous step:
 
 `compute.googleapis.com/K8RelatedInstance` is not an actual asset that
 listed in [Supported asset types][5]. The number generated for this
-custom asset is from filterings all compute instances that have a
+custom asset is from filtering all compute instances that have a
 `goog-gke-node` label. This label is used because it's a protected
 and automatically applied label to compute instances that were created
 by a GKE cluster.

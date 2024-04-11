@@ -18,7 +18,7 @@ the user running the resource counting script:
     - This method has been deprecated. As outlined in
     [Listing assets using the Security Command Center API][4],
     this functionality has been deprecated on `June 20, 2023` and will reach its
-    EOL on `June 0, 2024`.  
+    EOL on `June 20, 2024`.  
     ~~[Security Command Center][2] (faster, but not free). The user running the
     script must have one of these roles at the organization-level:~~
       - ~~`roles/resourcemanager.organizationAdmin`~~

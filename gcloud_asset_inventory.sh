@@ -25,8 +25,10 @@ declare -ar types=(
   appengine.googleapis.com/Application
   cloudfunctions.googleapis.com/CloudFunction
   compute.googleapis.com/Instance
+  compute.googleapis.com/K8RelatedInstance
   sqladmin.googleapis.com/Instance
   storage.googleapis.com/Bucket
+  k8s.io/Node
 )
 
 check_binary "gcloud"
@@ -41,16 +43,30 @@ outfile=$(mktemp -q)
 # shellcheck disable=SC2048
 for type in ${types[*]}; do
 
-  (echo "${organizations[*]}" \
-    | xargs -n1 -I{} gcloud asset list \
-        --asset-types "$type" \
-        --content-type resource \
-        --format 'value(assetType)' \
-        --organization {} \
-        --snapshot-time "$time" \
-    | sort \
-    | uniq -c \
-    | awk '{ printf "{\"%s\":%s}\n", $2, $1 }' >> "$outfile") &
+  if [ "$type" == "compute.googleapis.com/K8RelatedInstance" ]; then
+    (echo "${organizations[*]}" \
+      | xargs -n1 -I{} gcloud asset list \
+          --asset-types "compute.googleapis.com/Instance" \
+          --content-type resource \
+          --format 'value(assetType)' \
+          --organization {} \
+          --snapshot-time "$time" \
+          --filter 'resource.data.labels:goog-gke-node' \
+      | sort \
+      | uniq -c \
+      | awk '{ printf "{\"compute.googleapis.com/K8RelatedInstance\":%s}\n", $1 }' >> "$outfile") &
+  else
+    (echo "${organizations[*]}" \
+      | xargs -n1 -I{} gcloud asset list \
+          --asset-types "$type" \
+          --content-type resource \
+          --format 'value(assetType)' \
+          --organization {} \
+          --snapshot-time "$time" \
+      | sort \
+      | uniq -c \
+      | awk '{ printf "{\"%s\":%s}\n", $2, $1 }' >> "$outfile") &
+  fi
 
 done
 
